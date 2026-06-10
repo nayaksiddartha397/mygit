@@ -1,0 +1,26 @@
+# Environment & Secret files
+.env
+
+# IDE and editor settings
+.idea/
+.vscode/
+
+# macOS system files
+.AppleDouble
+.DS_Store
+.LSOverride
+
+# Packaging / Archives
+*.zip
+
+# Python compilation and cache files
+*$py.class
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+
+# Virtual Environments (if you use them)
+.venv/
+env/
+venv/
