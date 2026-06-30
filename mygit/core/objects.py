@@ -30,6 +30,7 @@ import struct
 # ---------------------------------------------------------------------------
 # Repo root helpers
 # ---------------------------------------------------------------------------
+# Helps to find the mygit folder no matter in which subFolder we are in
 
 def find_repo_root(start: str = ".") -> str:
     """Walk up until we find a .mygit directory; raise if not found."""
@@ -53,6 +54,7 @@ def objects_dir(repo_root: str) -> str:
 # Low-level read / write
 # ---------------------------------------------------------------------------
 
+# split SHA-1 such that first 2 char are foldername and last 38 char are filename 
 def _object_path(repo_root: str, sha: str) -> str:
     return os.path.join(objects_dir(repo_root), sha[:2], sha[2:])
 
@@ -62,9 +64,9 @@ def write_object(data: bytes, obj_type: str, repo_root: str) -> str:
     Hash and store an object.  Returns the 40-char hex SHA-1.
     Idempotent: if the object already exists it is not rewritten.
     """
-    header = f"{obj_type} {len(data)}\0".encode()
-    full = header + data
-    sha = hashlib.sha1(full).hexdigest()
+    header = f"{obj_type} {len(data)}\0".encode()       # Here obj type is blob and \0 is the sepearator btw header and data
+    full = header + data                                # Here Data is like Hello world or content
+    sha = hashlib.sha1(full).hexdigest()                # 40 char hexstring
     path = _object_path(repo_root, sha)
     if not os.path.exists(path):
         os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -124,7 +126,7 @@ def write_tree(entries: list[tuple[str, str]], repo_root: str) -> str:
     entries_sorted = sorted(entries, key=lambda e: e[0])
     raw = b""
     for name, sha_hex in entries_sorted:
-        sha_bin = bytes.fromhex(sha_hex)
+        sha_bin = bytes.fromhex(sha_hex)         #convert hexadecimal into binary
         raw += _BLOB_MODE + b" " + name.encode() + b"\0" + sha_bin
     return write_object(raw, "tree", repo_root)
 
@@ -140,7 +142,7 @@ def read_tree(sha: str, repo_root: str) -> list[tuple[str, str, str]]:
     i = 0
     while i < len(content):
         # find space between mode and name
-        sp = content.index(b" ", i)
+        sp = content.index(b" ", i)      
         mode = content[i:sp].decode()
         # find null terminator after name
         null = content.index(b"\0", sp + 1)

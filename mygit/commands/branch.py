@@ -30,7 +30,7 @@ def cmd_branch(args) -> None:
         print(f"error: {e}", file=sys.stderr)
         sys.exit(1)
 
-    if args.name is None:
+    if args.name is None:           # User Has not given the branch name
         # List branches
         current  = read_head_ref(repo_root)
         branches = list_branches(repo_root)

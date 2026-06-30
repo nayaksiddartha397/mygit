@@ -23,9 +23,12 @@ CYAN   = "\033[36m"
 BOLD   = "\033[1m"
 RESET  = "\033[0m"
 
+
+# the user has disabled colors or the program is running on Windows
 _NO_COLOR = os.environ.get("NO_COLOR") or os.name == "nt"
 
 
+# Helper for color
 def _c(code: str, text: str) -> str:
     return text if _NO_COLOR else f"{code}{text}{RESET}"
 

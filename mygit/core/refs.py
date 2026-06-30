@@ -19,7 +19,7 @@ import os
 def head_path(repo_root: str) -> str:
     return os.path.join(repo_root, ".mygit", "HEAD")
 
-
+# answers which branch am i currently
 def read_head_ref(repo_root: str) -> str:
     """
     Return the current branch name (e.g. 'main'), or the detached SHA.
@@ -77,6 +77,8 @@ def point_head_to_branch(branch: str, repo_root: str) -> None:
 # Branch refs
 # ---------------------------------------------------------------------------
 
+
+# Returns Branch
 def branch_path(branch: str, repo_root: str) -> str:
     return os.path.join(repo_root, ".mygit", "refs", "heads", branch)
 

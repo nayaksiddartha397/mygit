@@ -40,7 +40,7 @@ def cmd_log(args) -> None:
 
     branch = read_head_ref(repo_root)
     limit  = args.count
-    count  = 0
+    count  = 0            # No of prev commits you want to print
 
     while sha:
         if limit is not None and count >= limit:

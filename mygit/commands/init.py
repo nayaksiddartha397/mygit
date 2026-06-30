@@ -22,12 +22,12 @@ def cmd_init(args) -> None:
         print(f"Reinitialized existing mygit repository in {mygit_dir}")
         return
 
-    # Create directory tree
+    # Create directory tree.    Make objects, refs directory
     for d in [
-        os.path.join(mygit_dir, "objects"),
+        os.path.join(mygit_dir, "objects"),          
         os.path.join(mygit_dir, "refs", "heads"),
     ]:
-        os.makedirs(d, exist_ok=True)
+        os.makedirs(d, exist_ok=True)       # use the d above to makedirs
 
     # HEAD → symbolic ref to main branch
     with open(os.path.join(mygit_dir, "HEAD"), "w") as f:

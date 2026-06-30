@@ -39,7 +39,7 @@ def read_index(repo_root: str) -> dict[str, str]:
             line = line.rstrip("\n")
             if not line:
                 continue
-            sha, rel_path = line.split(" ", 1)
+            sha, rel_path = line.split(" ", 1)     # Split only once
             index[rel_path] = sha
     return index
 
@@ -78,7 +78,7 @@ def load_ignore_patterns(repo_root: str) -> list[str]:
     with open(ignore_file, "r") as f:
         for line in f:
             line = line.strip()
-            if line and not line.startswith("#"):
+            if line and not line.startswith("#"):       #Skip blank lines and lines starting with #
                 patterns.append(line)
     return patterns
 
