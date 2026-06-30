@@ -51,14 +51,13 @@ def cmd_status(args) -> None:
     index    = read_index(repo_root)
     ignore   = load_ignore_patterns(repo_root)
 
-    # Build committed tree map
+
     committed: dict[str, str] = {}
     if head_sha:
         commit = read_commit(head_sha, repo_root)
         for _mode, name, sha in read_tree(commit["tree"], repo_root):
             committed[name] = sha
 
-    # ---- Staged changes (index vs committed tree) -------------------------
     staged_new      = []
     staged_modified = []
     staged_deleted  = []
@@ -74,7 +73,6 @@ def cmd_status(args) -> None:
         if rel_path not in index:
             staged_deleted.append(rel_path)
 
-    # ---- Unstaged changes (working tree vs index) -------------------------
     unstaged_modified = []
     unstaged_deleted  = []
 
@@ -87,7 +85,6 @@ def cmd_status(args) -> None:
             if disk_sha != idx_sha:
                 unstaged_modified.append(rel_path)
 
-    # ---- Untracked files --------------------------------------------------
     untracked = []
     for dirpath, dirnames, filenames in os.walk(repo_root):
         dirnames[:] = [d for d in dirnames if d != ".mygit"]
@@ -98,7 +95,6 @@ def cmd_status(args) -> None:
                 untracked.append(rel)
     untracked.sort()
 
-    # ---- Print ------------------------------------------------------------
     print(f"On branch {_c(BOLD, branch)}")
     if head_sha is None:
         print("No commits yet")

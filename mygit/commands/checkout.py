@@ -28,13 +28,12 @@ def cmd_checkout(args) -> None:
 
     branch = args.name
 
-    # Refuse if already on that branch
     current = read_head_ref(repo_root)
     if current == branch:
         print(f"Already on branch '{branch}'.")
         return
 
-    # Branch must exist
+
     if branch not in list_branches(repo_root):
         print(f"error: branch '{branch}' not found.", file=sys.stderr)
         sys.exit(1)
@@ -44,12 +43,10 @@ def cmd_checkout(args) -> None:
         print(f"error: branch '{branch}' has no commits.", file=sys.stderr)
         sys.exit(1)
 
-    # Read the commit's tree
     commit      = read_commit(branch_sha, repo_root)
     tree_sha    = commit["tree"]
     tree_entries = read_tree(tree_sha, repo_root)
 
-    # Write files to disk
     new_index: dict[str, str] = {}
     for _mode, rel_path, blob_sha in tree_entries:
         abs_path = os.path.join(repo_root, rel_path)
@@ -59,7 +56,6 @@ def cmd_checkout(args) -> None:
             f.write(data)
         new_index[rel_path] = blob_sha
 
-    # Update index and HEAD
     write_index(new_index, repo_root)
     point_head_to_branch(branch, repo_root)
 

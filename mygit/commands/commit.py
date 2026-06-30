@@ -43,27 +43,23 @@ def cmd_commit(args) -> None:
         print("       Use 'mygit add <file>' to stage files first.")
         sys.exit(1)
 
-    # 1. Build tree from index
-    entries = list(index.items())   # [(rel_path, sha), ...]
+    entries = list(index.items()) 
     tree_sha = write_tree(entries, repo_root)
 
-    # 2. Resolve current HEAD commit (parent for the new commit)
     parent_sha = read_head_sha(repo_root)
 
-    # 3. Check if anything actually changed vs last commit
     if parent_sha:
         from core.objects import read_commit
         prev = read_commit(parent_sha, repo_root)
         if prev["tree"] == tree_sha:
             print("Nothing to commit — working tree is clean (no changes since last commit).")
             return
-
-    # 4. Author + timestamp
+        
     author    = _read_author(repo_root)
     timestamp = int(time.time())
     message   = args.message.strip()
 
-    # 5. Write commit object
+
     commit_sha = write_commit(
         tree_sha   = tree_sha,
         message    = message,
@@ -73,7 +69,6 @@ def cmd_commit(args) -> None:
         repo_root  = repo_root,
     )
 
-    # 6. Advance HEAD
     write_head_sha(commit_sha, repo_root)
 
     short = commit_sha[:7]

@@ -29,10 +29,8 @@ def cmd_add(args) -> None:
     staged_count = 0
 
     for pattern in args.files:
-        # Expand globs (e.g. "*.py", "src/**/*.py")
         matches = glob.glob(pattern, recursive=True)
         if not matches:
-            # treat as a literal path even if it doesn't exist yet (will error below)
             matches = [pattern]
 
         for filepath in matches:
@@ -41,7 +39,6 @@ def cmd_add(args) -> None:
             # Must be a regular file
             if not os.path.isfile(abs_path):
                 if os.path.isdir(abs_path):
-                    # Silently recurse into directories like real git add
                     for root, dirs, files in os.walk(abs_path):
                         # Skip .mygit itself
                         dirs[:] = [d for d in dirs if d != ".mygit"]
@@ -78,14 +75,11 @@ def _add_single(abs_path: str, repo_root: str, ignore_patterns: list[str]) -> bo
     """Hash and stage a single file.  Returns True on success."""
     rel_path = os.path.relpath(abs_path, repo_root)
 
-    # Normalise path separators to forward-slash for cross-platform consistency
     rel_path = rel_path.replace(os.sep, "/")
 
-    # Skip .mygit internals
     if rel_path.startswith(".mygit/"):
         return False
 
-    # Check ignore patterns
     if is_ignored(rel_path, ignore_patterns):
         print(f"  ignored: {rel_path}")
         return False

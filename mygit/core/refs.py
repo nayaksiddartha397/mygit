@@ -12,14 +12,12 @@ Branch files (.mygit/refs/heads/<name>) contain a bare commit SHA.
 
 import os
 
-# ---------------------------------------------------------------------------
-# HEAD
-# ---------------------------------------------------------------------------
+
 
 def head_path(repo_root: str) -> str:
     return os.path.join(repo_root, ".mygit", "HEAD")
 
-# answers which branch am i currently
+
 def read_head_ref(repo_root: str) -> str:
     """
     Return the current branch name (e.g. 'main'), or the detached SHA.
@@ -27,10 +25,9 @@ def read_head_ref(repo_root: str) -> str:
     with open(head_path(repo_root), "r") as f:
         content = f.read().strip()
     if content.startswith("ref: "):
-        # symbolic ref — return just the branch name
-        ref = content[5:]          # e.g. "refs/heads/main"
-        return ref.split("/")[-1]  # e.g. "main"
-    return content  # detached HEAD — bare SHA
+        ref = content[5:]         
+        return ref.split("/")[-1] 
+    return content  
 
 
 def read_head_sha(repo_root: str) -> str | None:
@@ -73,12 +70,8 @@ def point_head_to_branch(branch: str, repo_root: str) -> None:
         f.write(f"ref: refs/heads/{branch}\n")
 
 
-# ---------------------------------------------------------------------------
-# Branch refs
-# ---------------------------------------------------------------------------
 
 
-# Returns Branch
 def branch_path(branch: str, repo_root: str) -> str:
     return os.path.join(repo_root, ".mygit", "refs", "heads", branch)
 

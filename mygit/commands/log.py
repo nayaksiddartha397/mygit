@@ -12,7 +12,7 @@ import datetime
 from core.objects import find_repo_root, read_commit
 from core.refs    import read_head_sha, read_head_ref
 
-# ANSI colour codes (disabled on Windows without ANSICON)
+
 YELLOW  = "\033[33m"
 CYAN    = "\033[36m"
 GREEN   = "\033[32m"
@@ -40,7 +40,7 @@ def cmd_log(args) -> None:
 
     branch = read_head_ref(repo_root)
     limit  = args.count
-    count  = 0            # No of prev commits you want to print
+    count  = 0        
 
     while sha:
         if limit is not None and count >= limit:
@@ -50,7 +50,7 @@ def cmd_log(args) -> None:
         ts     = datetime.datetime.fromtimestamp(commit["timestamp"])
         date   = ts.strftime("%a %b %d %H:%M:%S %Y")
 
-        # Header line: commit sha  (like git log)
+
         decoration = ""
         if count == 0:
             decoration = f" {_c(CYAN, f'(HEAD -> {branch})')}"
@@ -58,7 +58,7 @@ def cmd_log(args) -> None:
         print(f"Author: {commit['author']}")
         print(f"Date:   {date}")
         print()
-        # Indent message body
+
         for line in commit["message"].splitlines():
             print(f"    {line}")
         print()

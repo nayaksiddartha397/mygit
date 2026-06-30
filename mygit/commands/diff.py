@@ -16,7 +16,6 @@ from core.objects import find_repo_root, read_blob, read_tree, read_commit
 from core.refs    import read_head_sha
 from core.index   import load_ignore_patterns, is_ignored
 
-# ANSI colours
 RED    = "\033[31m"
 GREEN  = "\033[32m"
 CYAN   = "\033[36m"
@@ -24,11 +23,9 @@ BOLD   = "\033[1m"
 RESET  = "\033[0m"
 
 
-# the user has disabled colors or the program is running on Windows
 _NO_COLOR = os.environ.get("NO_COLOR") or os.name == "nt"
 
 
-# Helper for color
 def _c(code: str, text: str) -> str:
     return text if _NO_COLOR else f"{code}{text}{RESET}"
 
@@ -95,13 +92,13 @@ def cmd_diff(args) -> None:
     committed = _get_committed_tree(repo_root)
     cwd       = os.getcwd()
 
-    # Determine which files to diff
+
     if args.file:
         abs_path = os.path.abspath(args.file)
         rel_path = os.path.relpath(abs_path, repo_root).replace(os.sep, "/")
         files_to_diff = [(rel_path, abs_path)]
     else:
-        # All files that are either committed or exist in the working tree
+
         all_rel = set(committed.keys())
         ignore_patterns = load_ignore_patterns(repo_root)
         # Walk working tree

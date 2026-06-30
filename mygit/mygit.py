@@ -8,7 +8,6 @@ import sys
 import os
 import argparse
 
-# Make sure commands and core are importable
 sys.path.insert(0, os.path.dirname(__file__))
 
 from commands.init     import cmd_init
@@ -31,7 +30,7 @@ def main():
 
     # init
     p_init = subparsers.add_parser("init", help="Initialize a new mygit repository")
-    p_init.set_defaults(func=cmd_init)
+    p_init.set_defaults(func=cmd_init)             # cmd_init(args)
 
     # add
     p_add = subparsers.add_parser("add", help="Stage file(s) to the index")

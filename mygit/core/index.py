@@ -16,17 +16,10 @@ The index lives at .mygit/index.
 import os
 import fnmatch
 
-# ---------------------------------------------------------------------------
-# Index path
-# ---------------------------------------------------------------------------
 
 def index_path(repo_root: str) -> str:
     return os.path.join(repo_root, ".mygit", "index")
 
-
-# ---------------------------------------------------------------------------
-# Read / write
-# ---------------------------------------------------------------------------
 
 def read_index(repo_root: str) -> dict[str, str]:
     """Returns {relative_path: sha_hex}.  Empty dict if index doesn't exist."""
@@ -39,7 +32,7 @@ def read_index(repo_root: str) -> dict[str, str]:
             line = line.rstrip("\n")
             if not line:
                 continue
-            sha, rel_path = line.split(" ", 1)     # Split only once
+            sha, rel_path = line.split(" ", 1)    
             index[rel_path] = sha
     return index
 
@@ -65,9 +58,6 @@ def unstage_file(rel_path: str, repo_root: str) -> None:
     write_index(idx, repo_root)
 
 
-# ---------------------------------------------------------------------------
-# .mygitignore support
-# ---------------------------------------------------------------------------
 
 def load_ignore_patterns(repo_root: str) -> list[str]:
     """Read .mygitignore and return a list of glob patterns."""
@@ -78,7 +68,7 @@ def load_ignore_patterns(repo_root: str) -> list[str]:
     with open(ignore_file, "r") as f:
         for line in f:
             line = line.strip()
-            if line and not line.startswith("#"):       #Skip blank lines and lines starting with #
+            if line and not line.startswith("#"):     
                 patterns.append(line)
     return patterns
 
@@ -99,22 +89,21 @@ def is_ignored(rel_path: str, patterns: list[str]) -> bool:
         pat = pattern.rstrip("/")
         is_dir_pattern = pattern.endswith("/")
 
-        # 1. Exact or glob match on the full relative path
+
         if fnmatch.fnmatch(rel_path, pat):
             return True
 
-        # 2. Basename-only match  (e.g. "*.pyc" matches "src/foo.pyc")
+
         if fnmatch.fnmatch(basename, pat):
             return True
 
-        # 3. Directory prefix match  (e.g. "cache/" matches "cache/temp.txt")
+
         if is_dir_pattern:
             if rel_path.startswith(pat + "/") or rel_path == pat:
                 return True
 
-        # 4. Any path component match  (e.g. "__pycache__" matches "src/__pycache__/x.pyc")
         parts = rel_path.split("/")
-        for part in parts[:-1]:   # directory components only
+        for part in parts[:-1]:  
             if fnmatch.fnmatch(part, pat):
                 return True
 
